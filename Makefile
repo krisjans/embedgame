@@ -1,6 +1,6 @@
 PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-OBJS = embedgame.o
+OBJS = embedgame.o platform_helpers.o
 
 ifeq ($(BUILD_MODE),debug)
 	CFLAGS += -g
