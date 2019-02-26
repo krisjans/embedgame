@@ -10,6 +10,13 @@ enum COLORS {
     RED = 31,
 };
 
+enum DIRECTIONS {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+};
+
 class Point {
 public:
     int x;
@@ -25,16 +32,51 @@ class SnakeGame {
     int width;
     int height;
     Point head;
-    Point tail;
+    DIRECTIONS direction;
+    int length;
 
+    vector<Point> body;
 public:
-    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), tail(head) {
+    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(5){
+	body.push_back(head);
     }
     COLORS pixelColor(int x, int y) {
 	if (isHead(Point(x,y))){ return YELLOW; };
-	if (isTail(Point(x,y))){ return RED; };
+	if (isBody(Point(x,y))){ return RED; };
 
 	return BLACK;
+    }
+    void tick() {
+	switch(direction) {
+	case UP:
+	    head.y--;
+	    if (head.y < 0) {
+		head.y = height;
+	    }
+	    break;
+	case DOWN:
+	    head.y++;
+	    if (head.y > height) {
+		head.y = 0;
+	    }
+	    break;
+	case LEFT:
+	    head.x--;
+	    if (head.x < 0) {
+		head.x = width;
+	    }
+	    break;
+	case RIGHT:
+	    head.x++;
+	    if (head.x > width) {
+		head.x = 0;
+	    }
+	    break;
+	}
+	body.insert(body.begin(), head);
+	if(body.size() > length) {
+	    body.pop_back();
+	}
     }
 
 
@@ -42,8 +84,15 @@ public:
 	return (head == p);
     }
 
-    bool isTail(Point p){
-	return (tail == p);
+
+
+    bool isBody(Point p) {
+	for (auto& b : body) {
+	    if (b == p) {
+		return true;
+	    }
+	}
+	return false;
     }
 
 
@@ -57,9 +106,11 @@ int main(int argc, char **argv) {
     clearScreen();
 
     while(1){
+	sleep_ms(50);
 	if (getkey() != -1) {
 	    break;
 	}
+	game.tick();
 
 	for(int x=0; x<WIDTH; x++){
 	    for(int y=0; y<HEIGHT; y++){
