@@ -40,3 +40,7 @@ void clearScreen() {
 void setCursorLocation(int x, int y) {
     printf("\033[%d;%dH", y, x);
 }
+
+void setTextColor(int color, int bold) {
+    printf("\033[%d;%dm", bold, color);
+}
