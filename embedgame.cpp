@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
     clearScreen();
     printf("hello2\n\n");
     int x = 0, y=2;
-    char c = '*';
+    char c = '0';
     while (1) {
 	if (getkey() != -1) {
 	    break;
@@ -19,6 +19,9 @@ int main(int argc, char **argv) {
 		++c;
 		if (c > 'z') {
 		    c = '*';
+		}
+		if (c >= '0' && c <= '7') {
+		    setTextColor(c - '1' + 30, 1);
 		}
 	    }
 	}
