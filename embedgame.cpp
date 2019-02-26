@@ -37,7 +37,7 @@ class SnakeGame {
 
     vector<Point> body;
 public:
-    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(5){
+    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(25){
 	body.push_back(head);
     }
     COLORS pixelColor(int x, int y) {
@@ -51,34 +51,44 @@ public:
 	case UP:
 	    head.y--;
 	    if (head.y < 0) {
-		head.y = height;
+		head.y = height - 1;
 	    }
 	    break;
 	case DOWN:
 	    head.y++;
-	    if (head.y > height) {
+	    if (head.y >= height) {
 		head.y = 0;
 	    }
 	    break;
 	case LEFT:
 	    head.x--;
 	    if (head.x < 0) {
-		head.x = width;
+		head.x = width - 1;
 	    }
 	    break;
 	case RIGHT:
 	    head.x++;
-	    if (head.x > width) {
+	    if (head.x >= width) {
 		head.x = 0;
 	    }
 	    break;
 	}
+
 	body.insert(body.begin(), head);
 	if(body.size() > length) {
 	    body.pop_back();
 	}
     }
 
+
+    void changeDirection(DIRECTIONS d){
+	if( d == UP && direction == DOWN) return;
+	if( d == DOWN && direction == UP) return;
+	if( d == LEFT && direction == RIGHT) return;
+	if( d == RIGHT && direction == LEFT) return;
+
+	direction = d;
+    }
 
     bool isHead(Point p){
 	return (head == p);
@@ -106,15 +116,20 @@ int main(int argc, char **argv) {
     clearScreen();
 
     while(1){
-	sleep_ms(50);
-	if (getkey() != -1) {
-	    break;
+	sleep_ms(150);
+	switch(getkey()){
+	case 'w': game.changeDirection(UP); break;
+	case 'a': game.changeDirection(LEFT); break;
+	case 's': game.changeDirection(DOWN); break;
+	case 'd': game.changeDirection(RIGHT); break;
+	case 'q': return 0;
 	}
+
 	game.tick();
 
 	for(int x=0; x<WIDTH; x++){
 	    for(int y=0; y<HEIGHT; y++){
-		setCursorLocation(x, y);
+		setCursorLocation(x+5, y+5);
 		setTextColor(game.pixelColor(x,y), 1);
 		printf("%c",  '*');
 	    }
