@@ -34,9 +34,9 @@ int getkey() {
 }
 
 void clearScreen() {
-	printf("\033[H\033[J");
+    printf("\033[H\033[J");
 }
 
 void setCursorLocation(int x, int y) {
-	printf("\033[%d;%dH", y, x);
+    printf("\033[%d;%dH", y, x);
 }
