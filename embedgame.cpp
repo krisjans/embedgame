@@ -1,5 +1,35 @@
 #include <stdio.h>
 #include "platform_helpers.h"
+#include <vector>
+
+using namespace std;
+
+enum COLORS {
+    BLACK = 31,
+    RED = 33,
+};
+
+class Point {
+public:
+    int x;
+    int y;
+    Point(int xx, int yy): x(xx), y(yy) {}
+};
+
+class SnakeGame {
+    int width;
+    int height;
+    Point head;
+    Point tail;
+
+public:
+    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), tail(head) {
+    }
+    COLORS pixelColor(int x, int y) {
+	return BLACK;
+    }
+
+};
 
 int main(int argc, char **argv) {
     clearScreen();
