@@ -1,6 +1,10 @@
 PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-OBJS = embedgame.o platform_helpers.o
+BUILD = $(PROJECT_ROOT)/build
+
+TARGET = $(BUILD)/embedgame
+
+OBJS = $(BUILD)/embedgame.o $(BUILD)/platform_helpers.o
 
 BUILD_MODE ?= debug
 
@@ -12,16 +16,20 @@ else
 	$(error Build mode $(BUILD_MODE) not supported by this Makefile)
 endif
 
-all:	embedgame
+all:	$(TARGET)
 
-embedgame:	$(OBJS)
-	$(CXX) -o $@ $^
+$(TARGET):	$(BUILD) $(OBJS)
+	$(CXX) -o $@ $(filter-out $<,$^)
 
-%.o:	$(PROJECT_ROOT)%.cpp
+$(BUILD)/%.o:	$(PROJECT_ROOT)%.cpp
 	$(CXX) -c $(CFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ $<
 
-%.o:	$(PROJECT_ROOT)%.c
+$(BUILD)/%.o:	$(PROJECT_ROOT)%.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
+$(BUILD):
+	mkdir -p $(BUILD)
+
 clean:
-	rm -fr embedgame $(OBJS)
+	rm -fr $(TARGET) $(OBJS)
+	rm -rf $(BUILD)
