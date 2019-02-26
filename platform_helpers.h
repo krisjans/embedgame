@@ -3,7 +3,7 @@
 
 void clearScreen();
 void setCursorLocation(int x, int y);
-void setTextColor(int color, int bold);
+void setTextColor(int color, int bold = 1);
 void sleep_ms(int milliseconds);
 int getkey();
 
