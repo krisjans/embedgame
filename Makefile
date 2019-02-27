@@ -16,6 +16,8 @@ else
 	$(error Build mode $(BUILD_MODE) not supported by this Makefile)
 endif
 
+CFLAGS += -std=gnu++11
+
 all:	$(TARGET)
 
 $(TARGET):	$(BUILD) $(OBJS)
