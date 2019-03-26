@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "platform_helpers.h"
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -8,6 +9,7 @@ enum COLORS {
     BLACK = 30,
     YELLOW = 32,
     RED = 31,
+    BLUE = 34,
 };
 
 enum DIRECTIONS {
@@ -39,15 +41,18 @@ class SnakeGame {
     Point head;
     DIRECTIONS direction;
     int length;
+    vector<Point> eggs;
 
     vector<Point> body;
 public:
     SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(25){
 	body.push_back(head);
+	eggs.push_back(generateNextEgg());
     }
     COLORS pixelColor(int x, int y) {
 	if (isHead(Point(x,y))){ return YELLOW; };
 	if (isBody(Point(x,y))){ return RED; };
+	if (isEgg(Point(x,y))){ return BLUE;}
 
 	return BLACK;
     }
@@ -101,14 +106,20 @@ public:
 	direction = d;
     }
 
-    bool isHead(Point p){
+    bool isHead(Point p) {
 	return (head == p);
     }
 
-
+    bool isEgg(Point p) {
+	return isVectorContainsPoint(p, eggs);
+    }
 
     bool isBody(Point p) {
-	for (auto& b : body) {
+	return isVectorContainsPoint(p, body);
+    }
+
+    bool isVectorContainsPoint(Point p, vector<Point> &points) {
+	for (auto& b : points) {
 	    if (b == p) {
 		return true;
 	    }
@@ -117,6 +128,10 @@ public:
     }
 
 
+private:
+    Point generateNextEgg() {
+	return Point(rand() % width, rand() % height);
+    }
 };
 
 
