@@ -14,10 +14,11 @@ enum COLORS {
 };
 
 enum DIRECTIONS {
-    UP,
+    UP = 0,
     DOWN,
     LEFT,
     RIGHT,
+    DIRECTION_COUNT,
 };
 
 enum GAME_STATE {
@@ -59,32 +60,7 @@ public:
 	return BLACK;
     }
     GAME_STATE tick() {
-	switch(direction) {
-	case UP:
-	    head.y--;
-	    if (head.y < 0) {
-		head.y = height - 1;
-	    }
-	    break;
-	case DOWN:
-	    head.y++;
-	    if (head.y >= height) {
-		head.y = 0;
-	    }
-	    break;
-	case LEFT:
-	    head.x--;
-	    if (head.x < 0) {
-		head.x = width - 1;
-	    }
-	    break;
-	case RIGHT:
-	    head.x++;
-	    if (head.x >= width) {
-		head.x = 0;
-	    }
-	    break;
-	}
+	move(head, direction);
 	if (isEgg(head)) {
 	    length += 5;
 	    eggs.pop_back();
@@ -100,6 +76,9 @@ public:
 	}
 
 	body.insert(body.begin(), head);
+
+	movePredators();
+
 	return RUNNING;
     }
 
@@ -148,6 +127,42 @@ private:
     }
     Point generateNextPredator() {
 	return spawnSomething();
+    }
+
+    void movePredators() {
+	for (auto& p : predators) {
+	    DIRECTIONS d = (DIRECTIONS)(rand() % DIRECTION_COUNT);
+	    move(p, d);
+	}
+    }
+
+    void move(Point &point, DIRECTIONS d) {
+	switch(d) {
+		case UP:
+		    point.y--;
+		    if (point.y < 0) {
+			point.y = height - 1;
+		    }
+		    break;
+		case DOWN:
+		    point.y++;
+		    if (point.y >= height) {
+			point.y = 0;
+		    }
+		    break;
+		case LEFT:
+		    point.x--;
+		    if (point.x < 0) {
+			point.x = width - 1;
+		    }
+		    break;
+		case RIGHT:
+		    point.x++;
+		    if (point.x >= width) {
+			point.x = 0;
+		    }
+		    break;
+		}
     }
 };
 
