@@ -46,10 +46,12 @@ class SnakeGame {
     vector<Point> eggs;
     vector<Point> predators;
     vector<Point> body;
+
+    int pendingEggs = 1;
+    int pendingPredators = 0;
 public:
     SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(5){
 	body.push_back(head);
-	eggs.push_back(generateNextEgg());
     }
     COLORS pixelColor(int x, int y) {
 	if (isHead(Point(x,y))){ return YELLOW; };
@@ -64,8 +66,8 @@ public:
 	if (isEgg(head)) {
 	    length += 5;
 	    eggs.pop_back();
-	    eggs.push_back(generateNextEgg());
-	    predators.push_back(generateNextPredator());
+	    ++pendingEggs;
+	    ++pendingPredators;
 	}
 	bool isMaxSizeReached = body.size() > length - 1;
 	if (isMaxSizeReached) {
@@ -77,6 +79,8 @@ public:
 
 	body.insert(body.begin(), head);
 
+	generateNextEgg();
+	generateNextPredator();
 	return movePredators();
     }
 
@@ -117,14 +121,22 @@ public:
 
 
 private:
-    Point spawnSomething() {
-	return Point(rand() % width, rand() % height);
+    void spawnSomething(vector<Point> & somethings, int & counter) {
+	if (counter <= 0) {
+	    return;
+	}
+	Point point = Point(rand() % width, rand() % height);
+	if (isBody(point) || isEgg(point) || isPredator(point)) {
+	    return;
+	}
+	somethings.push_back(point);
+	--counter;
     }
-    Point generateNextEgg() {
-	return spawnSomething();
+    void generateNextEgg() {
+	spawnSomething(eggs, pendingEggs);
     }
-    Point generateNextPredator() {
-	return spawnSomething();
+    void generateNextPredator() {
+	spawnSomething(predators, pendingPredators);
     }
 
     GAME_STATE movePredators() {
