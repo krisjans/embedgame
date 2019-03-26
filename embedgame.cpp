@@ -10,6 +10,7 @@ enum COLORS {
     YELLOW = 32,
     RED = 31,
     BLUE = 34,
+    BROWN = 33,
 };
 
 enum DIRECTIONS {
@@ -42,7 +43,7 @@ class SnakeGame {
     DIRECTIONS direction;
     int length;
     vector<Point> eggs;
-
+    vector<Point> predators;
     vector<Point> body;
 public:
     SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(5){
@@ -51,8 +52,9 @@ public:
     }
     COLORS pixelColor(int x, int y) {
 	if (isHead(Point(x,y))){ return YELLOW; };
-	if (isBody(Point(x,y))){ return RED; };
+	if (isBody(Point(x,y))){ return BROWN; };
 	if (isEgg(Point(x,y))){ return BLUE;}
+	if (isPredator(Point(x,y))){ return RED;}
 
 	return BLACK;
     }
@@ -87,6 +89,7 @@ public:
 	    length += 5;
 	    eggs.pop_back();
 	    eggs.push_back(generateNextEgg());
+	    predators.push_back(generateNextPredator());
 	}
 	bool isMaxSizeReached = body.size() > length - 1;
 	if (isMaxSizeReached) {
@@ -122,6 +125,10 @@ public:
 	return isVectorContainsPoint(p, body);
     }
 
+    bool isPredator(Point p) {
+	return isVectorContainsPoint(p, predators);
+    }
+
     bool isVectorContainsPoint(Point p, vector<Point> &points) {
 	for (auto& b : points) {
 	    if (b == p) {
@@ -133,8 +140,14 @@ public:
 
 
 private:
-    Point generateNextEgg() {
+    Point spawnSomething() {
 	return Point(rand() % width, rand() % height);
+    }
+    Point generateNextEgg() {
+	return spawnSomething();
+    }
+    Point generateNextPredator() {
+	return spawnSomething();
     }
 };
 
