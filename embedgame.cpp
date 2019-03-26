@@ -115,6 +115,7 @@ int main(int argc, char **argv) {
 
     initGetKey();
     clearScreen();
+    hideCursor();
 
     while(1){
 	sleep_ms(150);
@@ -125,6 +126,7 @@ int main(int argc, char **argv) {
 	case 'd': game.changeDirection(RIGHT); break;
 	case 'q':
 	    deInitKey();
+	    showCursor();
 	    return 0;
 	}
 
@@ -168,5 +170,6 @@ int main(int argc, char **argv) {
 //    setCursorLocation(1, 31);
 //    printf("~~~~~~~~~~End~~~~~~~~~~~\n");
     deInitKey();
+    showCursor();
     return 0;
 }

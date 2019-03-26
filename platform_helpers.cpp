@@ -46,6 +46,14 @@ void clearScreen() {
     printf("\033[H\033[J");
 }
 
+void hideCursor() {
+    printf("\033[?25l");
+}
+
+void showCursor() {
+    printf("\033[?25h");
+}
+
 void setCursorLocation(int x, int y) {
     printf("\033[%d;%dH", y, x);
 }
