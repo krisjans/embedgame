@@ -77,9 +77,7 @@ public:
 
 	body.insert(body.begin(), head);
 
-	movePredators();
-
-	return RUNNING;
+	return movePredators();
     }
 
 
@@ -129,11 +127,17 @@ private:
 	return spawnSomething();
     }
 
-    void movePredators() {
+    GAME_STATE movePredators() {
 	for (auto& p : predators) {
 	    DIRECTIONS d = (DIRECTIONS)(rand() % DIRECTION_COUNT);
 	    move(p, d);
+	    if (isBody(p)) {
+		return GAME_OVER;
+	    }
 	}
+
+	return RUNNING;
+
     }
 
     void move(Point &point, DIRECTIONS d) {
