@@ -45,7 +45,7 @@ class SnakeGame {
 
     vector<Point> body;
 public:
-    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(25){
+    SnakeGame(int w, int h): width(w), height(h), head(w / 2, h / 2), direction(LEFT), length(5){
 	body.push_back(head);
 	eggs.push_back(generateNextEgg());
     }
@@ -83,7 +83,11 @@ public:
 	    }
 	    break;
 	}
-
+	if (isEgg(head)) {
+	    length += 5;
+	    eggs.pop_back();
+	    eggs.push_back(generateNextEgg());
+	}
 	bool isMaxSizeReached = body.size() > length - 1;
 	if (isMaxSizeReached) {
 	    body.pop_back();
