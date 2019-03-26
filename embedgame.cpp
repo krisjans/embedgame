@@ -183,8 +183,9 @@ int main(int argc, char **argv) {
 	for(int x=0; x<WIDTH; x++){
 	    for(int y=0; y<HEIGHT; y++){
 		setCursorLocation(x+5, y+5);
-		setTextColor(game.pixelColor(x,y), 1);
-		printf("%c",  '*');
+		COLORS color = game.pixelColor(x,y);
+		setTextColor(color, 1);
+		printf("%c",  color == BLACK ? ' ' : '*');
 	    }
 	}
     }
