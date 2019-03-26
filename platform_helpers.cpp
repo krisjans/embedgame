@@ -10,9 +10,10 @@ void sleep_ms(int milliseconds) {
     ts.tv_nsec = (milliseconds % 1000) * 1000000;
     nanosleep(&ts, NULL);
 }
-int getkey() {
-    int character;
-    struct termios orig_term_attr;
+
+static struct termios orig_term_attr;
+
+void initGetKey() {
     struct termios new_term_attr;
 
     // set the terminal to raw mode
@@ -23,14 +24,22 @@ int getkey() {
     new_term_attr.c_cc[VMIN] = 0;
     tcsetattr(fileno(stdin), TCSANOW, &new_term_attr);
 
-    // read a character from the stdin stream without blocking
+}
+
+int getkey() {
+
+    int character;
+   // read a character from the stdin stream without blocking
     //   returns EOF (-1) if no character is available
     character = fgetc(stdin);
 
-    // restore the original terminal attributes
-    tcsetattr(fileno(stdin), TCSANOW, &orig_term_attr);
 
     return character;
+}
+
+void deInitKey() {
+    // restore the original terminal attributes
+    tcsetattr(fileno(stdin), TCSANOW, &orig_term_attr);
 }
 
 void clearScreen() {

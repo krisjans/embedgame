@@ -113,6 +113,7 @@ int main(int argc, char **argv) {
     const int HEIGHT = 30;
     SnakeGame game(WIDTH, HEIGHT);
 
+    initGetKey();
     clearScreen();
 
     while(1){
@@ -122,7 +123,9 @@ int main(int argc, char **argv) {
 	case 'a': game.changeDirection(LEFT); break;
 	case 's': game.changeDirection(DOWN); break;
 	case 'd': game.changeDirection(RIGHT); break;
-	case 'q': return 0;
+	case 'q':
+	    deInitKey();
+	    return 0;
 	}
 
 	game.tick();
@@ -164,5 +167,6 @@ int main(int argc, char **argv) {
 //    }
 //    setCursorLocation(1, 31);
 //    printf("~~~~~~~~~~End~~~~~~~~~~~\n");
+    deInitKey();
     return 0;
 }
