@@ -17,6 +17,11 @@ enum DIRECTIONS {
     RIGHT,
 };
 
+enum GAME_STATE {
+    RUNNING,
+    GAME_OVER
+};
+
 class Point {
 public:
     int x;
@@ -46,7 +51,7 @@ public:
 
 	return BLACK;
     }
-    void tick() {
+    GAME_STATE tick() {
 	switch(direction) {
 	case UP:
 	    head.y--;
@@ -74,10 +79,16 @@ public:
 	    break;
 	}
 
-	body.insert(body.begin(), head);
-	if(body.size() > length) {
+	bool isMaxSizeReached = body.size() > length - 1;
+	if (isMaxSizeReached) {
 	    body.pop_back();
 	}
+	if(isBody(head)) {
+	    return GAME_OVER;
+	}
+
+	body.insert(body.begin(), head);
+	return RUNNING;
     }
 
 
@@ -108,6 +119,8 @@ public:
 
 };
 
+
+
 int main(int argc, char **argv) {
     const int WIDTH = 80;
     const int HEIGHT = 30;
@@ -130,7 +143,10 @@ int main(int argc, char **argv) {
 	    return 0;
 	}
 
-	game.tick();
+	GAME_STATE state = game.tick();
+	if (state == GAME_OVER) {
+	    break;
+	}
 
 	for(int x=0; x<WIDTH; x++){
 	    for(int y=0; y<HEIGHT; y++){
