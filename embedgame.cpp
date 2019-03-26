@@ -95,7 +95,7 @@ public:
 	if (isMaxSizeReached) {
 	    body.pop_back();
 	}
-	if(isBody(head)) {
+	if(isBody(head) || isPredator(head)) {
 	    return GAME_OVER;
 	}
 
