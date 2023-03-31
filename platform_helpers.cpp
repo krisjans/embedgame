@@ -3,6 +3,8 @@
 #include <string.h>
 #include <termios.h>
 #include <time.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 void sleep_ms(int milliseconds) {
     struct timespec ts;
@@ -24,15 +26,17 @@ void initGetKey() {
     new_term_attr.c_cc[VMIN] = 0;
     tcsetattr(fileno(stdin), TCSANOW, &new_term_attr);
 
+    fcntl (STDIN_FILENO, F_SETFL, O_NONBLOCK);
 }
 
-int getkey() {
+char getkey() {
 
-    int character;
+    char character;
    // read a character from the stdin stream without blocking
     //   returns EOF (-1) if no character is available
-    character = fgetc(stdin);
-
+    if (read(STDIN_FILENO, &character, 1) != 1) {
+	character = 0;
+    }
 
     return character;
 }
